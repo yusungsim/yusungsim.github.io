@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yusung Sim</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Georgia", serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #222;
+      background: #fff;
+      padding: 3rem 1.5rem;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      border-bottom: 2px solid #222;
+      padding-bottom: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    section h2 {
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #555;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.35rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Education */
+    .edu-entry {
+      margin-bottom: 1.1rem;
+    }
+
+    .edu-degree {
+      font-weight: bold;
+    }
+
+    .edu-meta {
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    /* Publications */
+    section h3 {
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin-bottom: 0.9rem;
+      margin-top: 1.4rem;
+    }
+
+    section h3:first-of-type {
+      margin-top: 0;
+    }
+
+    ol.pubs {
+      list-style: none;
+      counter-reset: pub-counter;
+      padding: 0;
+    }
+
+    ol.pubs li {
+      counter-increment: pub-counter;
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.95rem;
+    }
+
+    ol.pubs li::before {
+      content: "[" counter(pub-counter) "]";
+      flex-shrink: 0;
+      color: #888;
+      font-size: 0.85rem;
+      padding-top: 0.1em;
+    }
+
+    ol.pubs li b {
+      font-weight: bold;
+    }
+
+    ol.pubs li a {
+      color: #0055cc;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    ol.pubs li a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 500px) {
+      header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <h1>Yusung Sim</h1>
+    </header>
+
+    <!-- Education -->
+    <section>
+      <h2>Education</h2>
+
+      <div class="edu-entry">
+        <div class="edu-degree">Ph.D. in Computer Science</div>
+        <div class="edu-meta">School of Computing, KAIST &nbsp;&middot;&nbsp; Mar. 2023 &ndash; Present</div>
+      </div>
+
+      <div class="edu-entry">
+        <div class="edu-degree">M.S. in Computer Science</div>
+        <div class="edu-meta">School of Computing, KAIST &nbsp;&middot;&nbsp; Mar. 2021 &ndash; Feb. 2023</div>
+      </div>
+
+      <div class="edu-entry">
+        <div class="edu-degree">B.S. in Computer Science</div>
+        <div class="edu-meta">School of Computing, KAIST &nbsp;&middot;&nbsp; Mar. 2016 &ndash; Feb. 2021</div>
+      </div>
+    </section>
+
+    <!-- Publications -->
+    <section>
+      <h2>Publications</h2>
+
+      <h3>International Conference &amp; Journal</h3>
+      <ol class="pubs">
+        <li>
+          Jihyeok Park, Seungmin An, Wonho Shin, <b>Yusung Sim</b>, and Sukyoung Ryu.
+          &ldquo;JSTAR: JavaScript Specification Type Analyzer using Refinement.&rdquo;
+          <em>Proceedings of the 36th IEEE/ACM International Conference on Automated Software Engineering (ASE)</em>, November 2021.
+        </li>
+        <li>
+          Doehyun Baek, Jakob Getz, <b>Yusung Sim</b>, Daniel Lehmann, Ben L. Titzer, Sukyoung Ryu, and Michael Pradel.
+          &ldquo;Wasm-R3: Record-Reduce-Replay for Realistic and Standalone WebAssembly Benchmarks.&rdquo;
+          <em>Proc. ACM Program. Lang.</em> 8, OOPSLA2, Article 347, October 2024, 27 pages.
+          <a href="https://doi.org/10.1145/3689787">https://doi.org/10.1145/3689787</a>
+        </li>
+        <li>
+          <b>Yusung Sim</b>, Wonho Shin, Sungho Lee.
+          &ldquo;Automated code transformation for distributed training of TensorFlow deep learning models.&rdquo;
+          <em>Science of Computer Programming</em>, Volume 242, 2025, 103260.
+          <a href="https://doi.org/10.1016/j.scico.2024.103260">https://doi.org/10.1016/j.scico.2024.103260</a>
+        </li>
+      </ol>
+
+      <h3>Domestic Conference &amp; Journal</h3>
+      <ol class="pubs">
+        <li>
+          <b>Yusung Sim</b> &amp; Sukyoung Ryu.
+          &ldquo;Program Equivalence Checking for WebAssembly via Symbolic Execution.&rdquo;
+          <em>한국정보과학회 학술발표논문집</em>, 제주, December 2022.
+        </li>
+        <li>
+          <b>Yusung Sim</b>, Doehyun Baek, Jakob Getz, &amp; Sukyoung Ryu.
+          &ldquo;Wasm Benchmark Generation by Recording and Replaying the Host Interoperation.&rdquo;
+          <em>한국정보과학회 학술발표논문집</em>, 부산, December 2023.
+        </li>
+        <li>
+          <b>Yusung Sim</b>, Doehyun Baek, Jakob Getz, &amp; Sukyoung Ryu.
+          &ldquo;Wasm Benchmark Generation by Recording and Replaying the Host Interoperation.&rdquo;
+          <em>KIISE Transactions on Computing Practices</em>, 30(7), 341&ndash;346, 2024.
+          <a href="https://doi.org/10.5626/KTCP.2024.30.7.341">https://doi.org/10.5626/KTCP.2024.30.7.341</a>
+        </li>
+      </ol>
+
+      <h3>Other</h3>
+      <ol class="pubs">
+        <li>
+          <b>Yusung Sim</b>.
+          &ldquo;Improving the WebAssembly Specification Framework for Future Proposals.&rdquo;
+          <em>APLAS 2024 SRC: Asian Symposium on Programming Languages and Systems, Student Research Competition</em>, Kyoto, Japan, October 22&ndash;25, 2024.
+          <a href="https://conf.researchr.org/details/aplas-2024/src-and-posters%3F/12/-SRC-Improving-the-WebAssembly-Specification-Framework-for-Future-Proposals">Link</a>
+        </li>
+      </ol>
+    </section>
+
+  </div>
+</body>
+</html>
