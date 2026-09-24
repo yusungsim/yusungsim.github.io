@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rust's Type Checker Implementation Is Unsound (ISSTA 2026)</title>
+<meta name="description" content="Rust's Type Checker Implementation Is Unsound: An Empirical Study on Soundness Bugs in rustc. Yusung Sim, Sukyoung Ryu, Jaemin Hong. ISSTA 2026. Paper, artifact, supplementary material, and talk information.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5c5c5c;
+    --line: #e2e2e2;
+    --card: #f6f6f6;
+    --accent: #c2410c;
+    --accent-fg: #ffffff;
+    --pending: #8a8a8a;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121212;
+      --fg: #ececec;
+      --muted: #a3a3a3;
+      --line: #2c2c2c;
+      --card: #1c1c1c;
+      --accent: #f97316;
+      --accent-fg: #121212;
+      --pending: #7a7a7a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  .venue {
+    display: inline-block;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 8px; }
+  h1 .sub { display: block; font-size: 1.15rem; font-weight: 400; color: var(--muted); margin-top: 6px; }
+  .authors { margin: 18px 0 4px; font-size: 1.05rem; }
+  .authors .presenter { font-weight: 600; }
+  .authors sup { font-size: 0.7em; color: var(--muted); }
+  .affil { color: var(--muted); font-size: 0.92rem; margin: 0 0 24px; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 32px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--card);
+    color: var(--fg); text-decoration: none; font-weight: 500; font-size: 0.95rem;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .btn.pending { color: var(--pending); border-style: dashed; cursor: default; }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+  h2 { font-size: 1.15rem; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .talk {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 20px; display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px;
+  }
+  .talk dt { color: var(--muted); font-size: 0.9rem; }
+  .talk dd { margin: 0; }
+  @media (max-width: 480px) { .talk { grid-template-columns: 1fr; gap: 2px; } .talk dt { margin-top: 8px; } }
+  .abstract p { margin: 0 0 12px; text-align: left; }
+  pre {
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.5;
+  }
+  .note { color: var(--muted); font-size: 0.9rem; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <span class="venue">ISSTA 2026 · Oakland, California</span>
+  <h1>Rust's Type Checker Implementation Is Unsound
+    <span class="sub">An Empirical Study on Soundness Bugs in rustc</span>
+  </h1>
+
+  <p class="authors">
+    <span class="presenter">Yusung Sim</span><sup>1</sup>,
+    Sukyoung Ryu<sup>1</sup>,
+    Jaemin Hong<sup>2,3</sup>
+  </p>
+  <p class="affil"><sup>1</sup>KAIST &nbsp;·&nbsp; <sup>2</sup>UNIST &nbsp;·&nbsp; <sup>3</sup>Yale University</p>
+
+  <div class="links">
+    <a class="btn primary" href="https://arxiv.org/abs/2608.28713">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Paper (arXiv)
+    </a>
+    <a class="btn" href="https://doi.org/10.5281/zenodo.20728406">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7l8-4 8 4-8 4-8-4zM4 7v10l8 4 8-4V7M12 11v10"/></svg>
+      Artifact (dataset &amp; code)
+    </a>
+    <a class="btn" href="https://doi.org/10.5281/zenodo.21452140">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6zM14 2v6h6M9 13h6M9 17h6"/></svg>
+      Supplementary material
+    </a>
+    <!-- ACM DL: the DOI below goes live when the October 2026 issue of PACMSE is published.
+         When it resolves, replace class="btn pending" with class="btn" and add href="https://doi.org/10.1145/3832220". -->
+    <span class="btn pending" title="Available when the ACM DL issue is published (October 2026)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      ACM DL · doi:10.1145/3832220 (coming soon)
+    </span>
+    <!-- Slides: uncomment after uploading slides.pdf next to this file.
+    <a class="btn" href="slides.pdf">Slides (PDF)</a>
+    -->
+  </div>
+
+  <h2>Talk at ISSTA 2026</h2>
+  <dl class="talk">
+    <dt>When</dt>
+    <dd>Thursday, 8 October 2026, 11:06 – 11:24 (Pacific Time)</dd>
+    <dt>Where</dt>
+    <dd>Junior Ballroom 1 &amp; 2, Oakland Marriott City Center</dd>
+    <dt>Session</dt>
+    <dd>Program Analysis and Verification Techniques</dd>
+    <dt>Speaker</dt>
+    <dd>Yusung Sim (KAIST)</dd>
+  </dl>
+
+  <h2>Abstract</h2>
+  <div class="abstract">
+    <p>Rust is claimed to be a type-sound language capable of preventing various undesirable behaviors, including memory bugs. However, rustc, the official Rust compiler, is not immune to defects; it contains soundness bugs, where the compiler accepts programs that should be rejected during type checking. In this work, we present an empirical study of 30 issues that report potential soundness bugs in rustc, collected from the GitHub issue tracker between January 1, 2022 and September 1, 2025. We analyze each issue in depth, focusing on its affected feature, symptom (how the feature is mishandled), consequence (the resulting undesirable behavior), triggering features, community consensus regarding whether it is a bug, and lifecycle, including introduction, discovery, and fix. Furthermore, we investigate existing artifacts, including implementations such as AddressSanitizer, Miri, Chalk, and a-mir-formality, alongside documentation such as the Rust Reference, the FLS, and Rust RFCs to assess their potential as oracles for testing the type soundness of rustc.</p>
+    <p>Our key findings indicate that: (1) Certain soundness bugs, typically triggered by implied bounds or trait objects, compromise memory safety. (2) Sound type checking is challenged by edge cases involving associated types and the interaction between lifetimes and traits. (3) Most bugs persist from the initial introduction of the relevant features and require significant time to be discovered. (4) While AddressSanitizer and Miri can detect soundness bugs that lead to memory bugs, a-mir-formality and Chalk are currently immature despite their potential to identify other bug categories. (5) Existing documentation frequently fails to provide precise explanations of the language semantics.</p>
+  </div>
+
+  <h2>Citation</h2>
+  <p class="note">Yusung Sim, Sukyoung Ryu, and Jaemin Hong. 2026. Rust's Type Checker Implementation Is Unsound: An Empirical Study on Soundness Bugs in rustc. <em>Proc. ACM Softw. Eng.</em> 3, ISSTA, Article ISSTA129 (October 2026). https://doi.org/10.1145/3832220</p>
+<pre>@article{sim2026unsound,
+  author    = {Sim, Yusung and Ryu, Sukyoung and Hong, Jaemin},
+  title     = {Rust's Type Checker Implementation Is Unsound:
+               An Empirical Study on Soundness Bugs in rustc},
+  journal   = {Proceedings of the ACM on Software Engineering},
+  volume    = {3},
+  number    = {ISSTA},
+  articleno = {ISSTA129},
+  year      = {2026},
+  month     = oct,
+  publisher = {ACM},
+  doi       = {10.1145/3832220}
+}</pre>
+
+  <footer>
+    Contact: Yusung Sim &lt;yusungsim@kaist.ac.kr&gt; · Programming Language Research Group, KAIST
+  </footer>
+</main>
+</body>
+</html>
