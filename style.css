@@ -91,6 +91,17 @@ p.pub a:hover {
   text-decoration: underline;
 }
 
+/* Paper titles linked to their own page: keep words intact (break-all is for DOIs) */
+p.pub a.pub-title {
+  word-break: normal;
+}
+
+p.pub-note {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
 @media (max-width: 500px) {
   header h1 { font-size: 1.5rem; }
 }
