@@ -27,6 +27,17 @@ header h1 {
   letter-spacing: 0.02em;
 }
 
+header .pronunciation {
+  color: #777;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Georgia lacks IPA glyphs (ɕ, ʌ); use fonts that cover them */
+header .ipa {
+  font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Times New Roman", serif;
+}
+
 /* Sections */
 section {
   margin-bottom: 2.5rem;
