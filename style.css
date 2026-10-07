@@ -33,6 +33,20 @@ header .pronunciation {
   margin-top: 0.25rem;
 }
 
+header .links {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+header .links a {
+  color: #0055cc;
+  text-decoration: none;
+}
+
+header .links a:hover {
+  text-decoration: underline;
+}
+
 /* Georgia lacks IPA glyphs (ɕ, ʌ); use fonts that cover them */
 header .ipa {
   font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Times New Roman", serif;
