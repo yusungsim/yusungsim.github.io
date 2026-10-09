@@ -53,6 +53,15 @@ header .ipa {
 }
 
 /* Sections */
+section p a {
+  color: #0055cc;
+  text-decoration: none;
+}
+
+section p a:hover {
+  text-decoration: underline;
+}
+
 section {
   margin-bottom: 2.5rem;
 }
@@ -109,16 +118,16 @@ p.pub b {
 p.pub a {
   color: #0055cc;
   text-decoration: none;
-  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 p.pub a:hover {
   text-decoration: underline;
 }
 
-/* Paper titles linked to their own page: keep words intact (break-all is for DOIs) */
+/* Paper titles linked to their own page: keep words intact (anywhere is for DOIs) */
 p.pub a.pub-title {
-  word-break: normal;
+  overflow-wrap: normal;
 }
 
 p.pub-note {
@@ -129,4 +138,10 @@ p.pub-note {
 
 @media (max-width: 500px) {
   header h1 { font-size: 1.5rem; }
+}
+
+p.pub .pub-venue {
+  font-weight: bold;
+  color: #555;
+  white-space: nowrap;
 }
