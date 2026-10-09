@@ -53,6 +53,10 @@ header .ipa {
 }
 
 /* Sections */
+section > p + p {
+  margin-top: 0.9rem;
+}
+
 section p a {
   color: #0055cc;
   text-decoration: none;
